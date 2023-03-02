@@ -42,14 +42,6 @@ function tool_versions {
   printf '%s\n' "${TOOLS[@]}"
 }
 
-function install_dependencies {
-  print_message "Installing ASDF dependencies"
-
-  sudo apt-get update --allow-releaseinfo-change
-  sudo apt install git automake autoconf libreadline-dev ncurses-dev libssl-dev libxslt-dev libffi-dev libtool \
-    unixodbc-dev openssh-client curl gnupg coreutils libbz2-dev wget openssl libyaml
-}
-
 function install_plugins {
   # Iterate through the list of tool names and add each one as an ASDF plugin
   local TOOL_NAMES=($(tool_versions | awk '{print $1}'))
@@ -65,6 +57,5 @@ function install_tools {
 }
 
 allow_use_of_legacy_version_files
-install_dependencies
 install_plugins
 install_tools

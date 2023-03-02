@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function print_message {
+  printf -- "--> %s...\n" "$1"
+}
+
+function install_asdf {
+  print_message "Installing ASDF"
+  git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf"
+}
+
+# circleci runs with a dynamic bash environment file, so we need to append our asdf-sourcing to that file
+function make_asdf_available_later {
+  echo ". \"$HOME/.asdf/asdf.sh\"" >> "$BASH_ENV"
+}
+
+install_asdf
+make_asdf_available_later

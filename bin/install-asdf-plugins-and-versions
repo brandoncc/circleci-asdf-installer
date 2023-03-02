@@ -47,7 +47,7 @@ function install_dependencies {
 
   sudo apt-get update --allow-releaseinfo-change
   sudo apt install git automake autoconf libreadline-dev ncurses-dev libssl-dev libxslt-dev libffi-dev libtool \
-    unixodbc-dev openssh-client curl gnupg coreutils libbz2-dev wget openssl
+    unixodbc-dev openssh-client curl gnupg coreutils libbz2-dev wget openssl libyaml
 }
 
 function install_plugins {

@@ -51,6 +51,11 @@ function install_plugins {
   done
 }
 
+function reshim {
+  print_message "Reshimming to make sure tools are available when restoring from cache"
+  asdf reshim
+}
+
 function install_tools {
   print_message "Installing ASDF versions"
   asdf install
@@ -59,3 +64,4 @@ function install_tools {
 allow_use_of_legacy_version_files
 install_plugins
 install_tools
+reshim

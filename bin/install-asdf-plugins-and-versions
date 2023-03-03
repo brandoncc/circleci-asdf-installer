@@ -47,9 +47,15 @@ function tool_versions {
 function install_plugins {
   # Iterate through the list of tool names and add each one as an ASDF plugin
   local TOOL_NAMES=($(tool_versions | awk '{print $1}'))
+  local INSTALLED_TOOLS=$(asdf plugin-list)
+
   for tool_name in "${TOOL_NAMES[@]}"; do
-    print_message "Adding ASDF plugin for $tool_name"
-    asdf plugin-add "$tool_name"
+    if ! printf '%s\n' "${INSTALLED_TOOLS[@]}" | grep -q "^$tool_name$"; then
+      print_message "Adding ASDF plugin for $tool_name"
+      asdf plugin-add "$tool_name"
+    else
+      print_message "Plugin for $tool_name is already installed"
+    fi
   done
 }
 

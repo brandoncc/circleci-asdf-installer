@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function print_message {
   printf -- "--> %s...\n" "$1"
 }

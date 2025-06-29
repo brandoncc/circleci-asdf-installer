@@ -6,14 +6,45 @@ function print_message {
   printf -- "--> %s...\n" "$1"
 }
 
-function install_asdf {
-  print_message "Installing ASDF"
-  git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf"
+function detect_architecture {
+  local arch=$(uname -m)
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  
+  case "$arch" in
+    x86_64) arch="amd64" ;;
+    aarch64|arm64) arch="arm64" ;;
+    *) echo "Unsupported architecture: $arch" >&2; exit 1 ;;
+  esac
+  
+  echo "${os}-${arch}"
 }
 
-# circleci runs with a dynamic bash environment file, so we need to append our asdf-sourcing to that file
+function install_asdf {
+  local arch_string=$(detect_architecture)
+  local latest_url="https://api.github.com/repos/asdf-vm/asdf/releases/latest"
+  local download_url=$(curl -s "$latest_url" | grep "browser_download_url.*${arch_string}\.tar\.gz\"" | head -1 | cut -d '"' -f 4)
+  
+  if [ -z "$download_url" ]; then
+    echo "Could not find ASDF binary for architecture: $arch_string" >&2
+    exit 1
+  fi
+  
+  print_message "Installing ASDF 0.16+"
+  mkdir -p "$HOME/.asdf/bin"
+  
+  # Download and extract the tar.gz file
+  local temp_file=$(mktemp)
+  curl -sL "$download_url" -o "$temp_file"
+  
+  # Extract to bin directory
+  tar -xzf "$temp_file" -C "$HOME/.asdf/bin"
+  rm "$temp_file"
+}
+
 function make_asdf_available_later {
-  echo ". \"$HOME/.asdf/asdf.sh\"" >> "$BASH_ENV"
+  export ASDF_DATA_DIR="$HOME/.asdf"
+  echo "export ASDF_DATA_DIR=\"$HOME/.asdf\"" >> "$BASH_ENV"
+  echo "export PATH=\"\$ASDF_DATA_DIR/bin:\$ASDF_DATA_DIR/shims:\$PATH\"" >> "$BASH_ENV"
 }
 
 install_asdf

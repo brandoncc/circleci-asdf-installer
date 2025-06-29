@@ -1,9 +1,11 @@
 circleci-asdf-installer
 ---
 
-A tool that aims to simplify installing and using asdf in circleci configurations. This tool is built for ubuntu, but it
+A tool that aims to simplify installing and using asdf 0.16+ in circleci configurations. This tool is built for ubuntu, but it
 will probably work with other distributions. You will need to install any dependencies as your first step, before
 running the other steps shown below.
+
+**Note**: This tool now supports ASDF 0.16+ only. The binary version of ASDF is downloaded and installed automatically.
 
 ### Supported features
 
